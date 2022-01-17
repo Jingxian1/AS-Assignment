@@ -97,6 +97,7 @@ namespace AS_Assignment
         {
             if (ValidateCaptcha())
             {
+                var email = tb_userid.Text;
                 string pwd = tb_pwd.Text.ToString().Trim();
                 string userid = tb_userid.Text.ToString().Trim();
                 SHA512Managed hashing = new SHA512Managed();
@@ -104,45 +105,42 @@ namespace AS_Assignment
                 string dbSalt = getDBSalt(userid);
                 if (pwd != "" || userid != "") { 
                 try
-                {
-                    if (dbSalt != null && dbSalt.Length > 0 && dbHash != null && dbHash.Length > 0)
-                    {
-                        string pwdWithSalt = pwd + dbSalt;
-                        byte[] hashWithSalt = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwdWithSalt));
-                        string userHash = Convert.ToBase64String(hashWithSalt);
-                        if (userHash.Equals(dbHash))
+                {    if (retrieveFLA(email) < 3)
                         {
-                            Session["LoggedIn"] = tb_userid.Text.Trim();
-
-                            string guid = Guid.NewGuid().ToString();
-                            Session["AuthToken"] = guid;
-
-                            Response.Cookies.Add(new HttpCookie("AuthToken", guid));
-
-                            Response.Redirect("HomePage.aspx", false);
-                        }
-
-
-                        else
-                        {
-                                var email = tb_userid.Text;
-                                if (retrieveFLA(email) < 3)
+                            if (dbSalt != null && dbSalt.Length > 0 && dbHash != null && dbHash.Length > 0)
+                            {
+                                string pwdWithSalt = pwd + dbSalt;
+                                byte[] hashWithSalt = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwdWithSalt));
+                                string userHash = Convert.ToBase64String(hashWithSalt);
+                                if (userHash.Equals(dbHash))
                                 {
-                                    lblMessage.ForeColor = Color.Red;
-                                    lblMessage.Text = "Userid or password not valid. Please try again.";
-                                    addFLA(email);
+                                    Session["LoggedIn"] = tb_userid.Text.Trim();
+
+                                    string guid = Guid.NewGuid().ToString();
+                                    Session["AuthToken"] = guid;
+
+                                    Response.Cookies.Add(new HttpCookie("AuthToken", guid));
+
+                                    Response.Redirect("HomePage.aspx", false);
                                 }
+
+
                                 else
                                 {
-                                    lblMessage.ForeColor = Color.Red;
-                                    lblMessage.Text = ("Account locked out");
-
-                                    var aTimer = new System.Timers.Timer(200);
-                                    aTimer.Elapsed += resetFLA;
-                                    aTimer.Interval = 200;
-                                    aTimer.Enabled = true;
-                                }
+                                        lblMessage.ForeColor = Color.Red;
+                                        lblMessage.Text = "Userid or password not valid. Please try again.";
+                                        addFLA(email);
+                                }   
                             }
+                        }
+                    else
+                    {
+                        lblMessage.ForeColor = Color.Red;
+                        lblMessage.Text = ("Account locked out");
+                        var aTimer = new System.Timers.Timer(60000);
+                        aTimer.Elapsed += new ElapsedEventHandler(resetFLA);
+                        aTimer.Interval = 60000;
+                        aTimer.Enabled = true;
                     }
                 }
                 catch (Exception ex)
