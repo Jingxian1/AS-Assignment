@@ -136,8 +136,9 @@ namespace AS_Assignment
                                 {
                                     lblMessage.ForeColor = Color.Red;
                                     lblMessage.Text = ("Account locked out");
+
                                     var aTimer = new System.Timers.Timer(200);
-                                    aTimer.Elapsed += new ElapsedEventHandler(resetFLA);
+                                    aTimer.Elapsed += resetFLA;
                                     aTimer.Interval = 200;
                                     aTimer.Enabled = true;
                                 }
@@ -146,7 +147,7 @@ namespace AS_Assignment
                 }
                 catch (Exception ex)
                 {
-                    lblMessage.Text = ex.ToString();
+                        throw new Exception(ex.ToString());
                 }
                 finally { }
                 }
