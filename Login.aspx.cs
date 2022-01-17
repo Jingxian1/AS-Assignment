@@ -285,12 +285,13 @@ namespace AS_Assignment
             {
                 using (SqlConnection con = new SqlConnection(MYDBConnectionString))
                 {
-                    using (SqlCommand cmd = new SqlCommand("UPDATE Assignment SET FLA = @FLA WHERE email='" + email + "'"))
+                    using (SqlCommand cmd = new SqlCommand("UPDATE Assignment SET FLA = @FLA WHERE email=@email"))
                     {
                         using (SqlDataAdapter sda = new SqlDataAdapter())
                         {
                             cmd.CommandType = CommandType.Text;
 
+                            cmd.Parameters.AddWithValue("@email", email);
                             cmd.Parameters.AddWithValue("@FLA", retrieveFLA(email) + 1);
                             cmd.Connection = con;
                             con.Open();
