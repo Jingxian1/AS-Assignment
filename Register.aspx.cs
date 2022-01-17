@@ -123,10 +123,11 @@ namespace AS_Assignment
         protected bool checkEmail(string email)
         {
             SqlConnection connection = new SqlConnection(MYDBConnectionString);
-            string sql = "SELECT COUNT(email) As EmailCount FROM Assignment WHERE email='" + email + "'";
+            string sql = "SELECT COUNT(email) As EmailCount FROM Assignment WHERE email= @email";
             SqlCommand command = new SqlCommand(sql, connection);
             try
             {
+                command.Parameters.AddWithValue("@email", email);
                 connection.Open();
                 int EmailCount = (int)command.ExecuteScalar();
                 if (EmailCount > 0)

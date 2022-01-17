@@ -131,15 +131,15 @@ namespace AS_Assignment
                                     lblMessage.ForeColor = Color.Red;
                                     lblMessage.Text = "Userid or password not valid. Please try again.";
                                     addFLA(email);
-                                    var aTimer = new System.Timers.Timer(600000);
-                                    aTimer.Elapsed += new ElapsedEventHandler(resetFLA);
-                                    aTimer.Interval = 600000;
-                                    aTimer.Enabled = true;
                                 }
                                 else
                                 {
                                     lblMessage.ForeColor = Color.Red;
                                     lblMessage.Text = ("Account locked out");
+                                    var aTimer = new System.Timers.Timer(200);
+                                    aTimer.Elapsed += new ElapsedEventHandler(resetFLA);
+                                    aTimer.Interval = 200;
+                                    aTimer.Enabled = true;
                                 }
                             }
                     }
@@ -233,10 +233,11 @@ namespace AS_Assignment
         protected int retrieveFLA(string email)
         {
             SqlConnection connection = new SqlConnection(MYDBConnectionString);
-            string sql = "SELECT FLA As count FROM Assignment WHERE email='" + email + "'";
+            string sql = "SELECT FLA As count FROM Assignment WHERE email= @email";
             SqlCommand command = new SqlCommand(sql, connection);
             try
             {
+                command.Parameters.AddWithValue("@email", email);
                 connection.Open();
                 int count = (int)command.ExecuteScalar();
                 connection.Close();
@@ -256,13 +257,14 @@ namespace AS_Assignment
                 var email = tb_userid.Text;
                 using (SqlConnection con = new SqlConnection(MYDBConnectionString))
                 {
-                    using (SqlCommand cmd = new SqlCommand("UPDATE Assignment SET FLA = @FLA WHERE email='" + email + "'"))
+                    using (SqlCommand cmd = new SqlCommand("UPDATE Assignment SET FLA = @FLA WHERE email= @email"))
                     {
                         using (SqlDataAdapter sda = new SqlDataAdapter())
                         {
                             cmd.CommandType = CommandType.Text;
 
                             cmd.Parameters.AddWithValue("@FLA", 0);
+                            cmd.Parameters.AddWithValue("@email", email);
                             cmd.Connection = con;
                             con.Open();
                             cmd.ExecuteNonQuery();
