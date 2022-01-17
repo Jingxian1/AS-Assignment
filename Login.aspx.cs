@@ -131,22 +131,22 @@ namespace AS_Assignment
                                     lblMessage.ForeColor = Color.Red;
                                     lblMessage.Text = "Userid or password not valid. Please try again.";
                                     addFLA(email);
-                                    var aTimer = new System.Timers.Timer(600000);
-                                    aTimer.Elapsed += new ElapsedEventHandler(resetFLA);
-                                    aTimer.Interval = 600000;
-                                    aTimer.Enabled = true;
                                 }
                                 else
                                 {
                                     lblMessage.ForeColor = Color.Red;
                                     lblMessage.Text = ("Account locked out");
+                                    var aTimer = new System.Timers.Timer(2000);
+                                    aTimer.Elapsed += resetFLA;
+                                    aTimer.Interval = 2000;
+                                    aTimer.Enabled = true;
                                 }
                             }
                     }
                 }
                 catch (Exception ex)
                 {
-                    lblMessage.Text = ex.ToString();
+                        throw new Exception(ex.ToString());
                 }
                 finally { }
                 }
