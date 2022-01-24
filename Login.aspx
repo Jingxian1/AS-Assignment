@@ -7,7 +7,7 @@
     <script src="https://www.google.com/recaptcha/api.js"></script>
 </head>
 <body>
-    <form id="form1" runat="server">
+    <form id="form1" runat="server" asp-antiforgery="true">
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
         <asp:HiddenField ID="forgeryToken" runat="server"/>
         <div>
