@@ -27,12 +27,12 @@ namespace AS_Assignment
 
         protected void btn_checkPassword_Click(object sender, EventArgs e)
         {
-
             int scores = checkPassword(tb_password.Text);
             string check = checkDate(tb_date.Text);
             string checkFName = checkFirstName(tb_firstName.Text);
             string checkLName = checkLastName(tb_lastName.Text);
             string checkEEmail = checkEmailfield(tb_email.Text);
+            string checkCCN = checkCC(tb_cardnum.Text, tb_cvv.Text, tb_expiry.Text);
 
             string status = "";
             if (check != null)
@@ -54,6 +54,11 @@ namespace AS_Assignment
             {
                 lbl_email.ForeColor = Color.Red;
                 lbl_email.Text = checkEEmail;
+            }
+            if (checkCCN != null)
+            {
+                lbl_cardnum.ForeColor = Color.Red;
+                lbl_cvv.ForeColor = Color.Red;
             }
 
             switch (scores)
@@ -114,7 +119,7 @@ namespace AS_Assignment
             }
             else
             {
-                lbl_email.Text = "Email exists in database";
+                lbl_email.Text = "Email does not exists in database";
                 lbl_email.ForeColor = Color.Red;
             }
 
@@ -274,6 +279,24 @@ namespace AS_Assignment
             else
             {
                 check = "Please enter Date of Birth";
+            }
+            return check;
+        }
+
+        private string checkCC(string CCN, string CVV, string date)
+        {
+            string check = "";
+            if(CCN != string.Format("{0:0000 0000 0000 0000}", (Int64.Parse("1234567812345678"))))
+            {
+                check += "Credit card number format is invalid.";
+            }
+            if(CVV != string.Format("{0:000}", (Int64.Parse("1234567812345678"))))
+            {
+                check += "CVV format is invalid.";
+            } 
+            if(date != string.Format("{0:00/00}", (Int64.Parse("1234567812345678"))))
+            {
+                check += "Expiry date format is invalid.";
             }
             return check;
         }

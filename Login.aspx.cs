@@ -93,6 +93,30 @@ namespace AS_Assignment
                 }
             }
         }
+        protected bool checkEmail(string email)
+        {
+            SqlConnection connection = new SqlConnection(MYDBConnectionString);
+            string sql = "SELECT COUNT(email) As EmailCount FROM Assignment WHERE email= @email";
+            SqlCommand command = new SqlCommand(sql, connection);
+            try
+            {
+                command.Parameters.AddWithValue("@email", email);
+                connection.Open();
+                int EmailCount = (int)command.ExecuteScalar();
+                if (EmailCount > 0)
+                {
+                    connection.Close();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+            finally { connection.Close(); }
+            return false;
+        }
+
         protected void LoginMe(object sender, EventArgs e)
         {
             if (ValidateCaptcha())
@@ -105,43 +129,53 @@ namespace AS_Assignment
                 string dbSalt = getDBSalt(userid);
                 if (pwd != "" || userid != "") { 
                 try
-                {    if (retrieveFLA(email) < 3)
+                {
+                        if (checkEmail(email))
                         {
-                            if (dbSalt != null && dbSalt.Length > 0 && dbHash != null && dbHash.Length > 0)
+                            if (retrieveFLA(email) < 3)
                             {
-                                string pwdWithSalt = pwd + dbSalt;
-                                byte[] hashWithSalt = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwdWithSalt));
-                                string userHash = Convert.ToBase64String(hashWithSalt);
-                                if (userHash.Equals(dbHash))
+                                if (dbSalt != null && dbSalt.Length > 0 && dbHash != null && dbHash.Length > 0)
                                 {
-                                    Session["LoggedIn"] = tb_userid.Text.Trim();
+                                    string pwdWithSalt = pwd + dbSalt;
+                                    byte[] hashWithSalt = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwdWithSalt));
+                                    string userHash = Convert.ToBase64String(hashWithSalt);
+                                    if (userHash.Equals(dbHash))
+                                    {
+                                        Session["LoggedIn"] = tb_userid.Text.Trim();
 
-                                    string guid = Guid.NewGuid().ToString();
-                                    Session["AuthToken"] = guid;
+                                        string guid = Guid.NewGuid().ToString();
+                                        Session["AuthToken"] = guid;
 
-                                    Response.Cookies.Add(new HttpCookie("AuthToken", guid));
+                                        Response.Cookies.Add(new HttpCookie("AuthToken", guid));
 
-                                    Response.Redirect("HomePage.aspx", false);
-                                }
+                                        Response.Redirect("HomePage.aspx", false);
+                                    }
 
 
-                                else
-                                {
+                                    else
+                                    {
                                         lblMessage.ForeColor = Color.Red;
                                         lblMessage.Text = "Userid or password not valid. Please try again.";
                                         addFLA(email);
-                                }   
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                lblMessage.ForeColor = Color.Red;
+                                lblMessage.Text = ("Account locked out");
+                                // reset failed attempt count after ...
+                                var aTimer = new System.Timers.Timer(200);
+                                aTimer.Elapsed += new ElapsedEventHandler(resetFLA);
+                                aTimer.Interval = 200;
+                                aTimer.Enabled = true;
                             }
                         }
-                    else
-                    {
-                        lblMessage.ForeColor = Color.Red;
-                        lblMessage.Text = ("Account locked out");
-                        var aTimer = new System.Timers.Timer(60000);
-                        aTimer.Elapsed += new ElapsedEventHandler(resetFLA);
-                        aTimer.Interval = 60000;
-                        aTimer.Enabled = true;
-                    }
+                        else
+                        {
+                            lblMessage.ForeColor = Color.Red;
+                            lblMessage.Text = "Email is not registered.";
+                        }
                 }
                 catch (Exception ex)
                 {
