@@ -71,13 +71,23 @@
     <Content Include="App_Data\assignmentDB_log.ldf">
       <DependentUpon>assignmentDB.mdf</DependentUpon>
     </Content>
+    <Content Include="CPassword.aspx" />
+    <Content Include="ErrorPage\403Error.html" />
     <Content Include="ErrorPage\404Error.html" />
+    <Content Include="ErrorPage\500Error.html" />
     <Content Include="HomePage.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="Web.config" />
     <Content Include="Register.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CPassword.aspx.cs">
+      <DependentUpon>CPassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CPassword.aspx.designer.cs">
+      <DependentUpon>CPassword.aspx</DependentUpon>
+    </Compile>
     <Compile Include="HomePage.aspx.cs">
       <DependentUpon>HomePage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
