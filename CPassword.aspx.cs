@@ -98,7 +98,7 @@ namespace AS_Assignment
                 }
                 catch (Exception ex)
                 {
-                    lblMessage.Text = ex.ToString();
+                    throw new Exception(ex.ToString());
                 }
                 finally { }
             }
