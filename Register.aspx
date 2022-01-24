@@ -88,7 +88,8 @@
                 </asp:TableRow>
 
                 <asp:TableRow>
-                    <asp:TableCell ColumnSpan="3"><asp:TextBox  runat="server" ID="tb_cardnum" TextMode="Number" Width="270"/><asp:Label runat="server" ID="lbl_cardnum"/></asp:TableCell>
+                    <asp:TableCell ColumnSpan="3"><asp:TextBox  runat="server" ID="tb_cardnum" TextMode="Number" Width="270"/></asp:TableCell>
+                    <asp:TableCell><asp:Label runat="server" ID="lbl_cardnum"/></asp:TableCell>
                 </asp:TableRow>
 
                 <asp:TableRow>
@@ -99,6 +100,11 @@
                 <asp:TableRow>
                     <asp:TableCell><asp:TextBox  runat="server" ID="tb_cvv" TextMode="Number" width="130px"/><asp:Label runat="server" ID="lbl_cvv"/></asp:TableCell>
                     <asp:TableCell><asp:TextBox  runat="server" ID="tb_expiry" width="130px"/></asp:TableCell>
+                </asp:TableRow>
+
+                <asp:TableRow>
+                    <asp:TableCell><div>Photo*: </div></asp:TableCell>
+                    <asp:TableCell><asp:FileUpload ID="tb_image" runat="server" /><asp:Label ID="lbl_image" runat="server"/></asp:TableCell>
                 </asp:TableRow>
 
                 <asp:TableRow>

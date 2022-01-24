@@ -159,6 +159,24 @@ namespace AS_Assignment
         protected global::System.Web.UI.WebControls.TextBox tb_expiry;
 
         /// <summary>
+        /// tb_image control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload tb_image;
+
+        /// <summary>
+        /// lbl_image control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbl_image;
+
+        /// <summary>
         /// reg_button control.
         /// </summary>
         /// <remarks>

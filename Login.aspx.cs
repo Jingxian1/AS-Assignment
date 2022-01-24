@@ -155,7 +155,7 @@ namespace AS_Assignment
                                     else
                                     {
                                         lblMessage.ForeColor = Color.Red;
-                                        lblMessage.Text = "Userid or password not valid. Please try again.";
+                                        lblMessage.Text = "Email or password not valid. Please try again.";
                                         addFLA(email);
                                     }
                                 }
@@ -174,7 +174,7 @@ namespace AS_Assignment
                         else
                         {
                             lblMessage.ForeColor = Color.Red;
-                            lblMessage.Text = "Email is not registered.";
+                            lblMessage.Text = "Email or Password is not valid. Please try again.";
                         }
                 }
                 catch (Exception ex)

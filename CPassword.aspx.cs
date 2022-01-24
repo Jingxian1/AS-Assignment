@@ -60,13 +60,10 @@ namespace AS_Assignment
             {
                 try
                 {
-                    lblMessage.Text = "no email";
                     if (checkEmail(userid))
                     {
-                        lblMessage.Text = "yes email";
                         if (dbSalt != null && dbSalt.Length > 0 && dbHash != null && dbHash.Length > 0)
                         {
-                            lblMessage.Text += " FUCK";
                             string pwdWithSalt = pwd + dbSalt;
                             byte[] hashWithSalt = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwdWithSalt));
                             string userHash = Convert.ToBase64String(hashWithSalt);

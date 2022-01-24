@@ -32,13 +32,14 @@ namespace AS_Assignment
             string checkFName = checkFirstName(tb_firstName.Text);
             string checkLName = checkLastName(tb_lastName.Text);
             string checkEEmail = checkEmailfield(tb_email.Text);
-            string checkCCN = checkCC(tb_cardnum.Text, tb_cvv.Text, tb_expiry.Text);
+            string checkphoto = checkPhoto(tb_image.FileName);
 
             string status = "";
             if (check != null)
             {
                 lbl_date.ForeColor = Color.Red;
                 lbl_date.Text = check;
+                lbl_date.Text += tb_image.FileName.ToString();
             }
             if (checkFName != null)
             {
@@ -55,10 +56,10 @@ namespace AS_Assignment
                 lbl_email.ForeColor = Color.Red;
                 lbl_email.Text = checkEEmail;
             }
-            if (checkCCN != null)
+            if(checkphoto == null)
             {
-                lbl_cardnum.ForeColor = Color.Red;
-                lbl_cvv.ForeColor = Color.Red;
+                lbl_image.ForeColor = Color.Red;
+                lbl_image.Text = checkphoto;
             }
 
             switch (scores)
@@ -114,12 +115,12 @@ namespace AS_Assignment
             IV = cipher.IV;
             if (checkEmail(email))
             {
-                createAccount();
+                createAccount();    
                 Response.Redirect("Login.aspx");
             }
             else
             {
-                lbl_email.Text = "Email does not exists in database";
+                lbl_email.Text = "Email exists in database";
                 lbl_email.ForeColor = Color.Red;
             }
 
@@ -153,9 +154,12 @@ namespace AS_Assignment
         {
             try
             {
+                string str = tb_image.FileName;
+                tb_image.PostedFile.SaveAs(Server.MapPath("~/Upload/" + str));
+                string Image = "~/Upload/" + str.ToString();
                 using (SqlConnection con = new SqlConnection(MYDBConnectionString))
                 {
-                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Assignment VALUES(@firstName, @lastName, @email, @passwordHash, @passwordSalt, @DOB, @cardNum, @CVV, @cardExp, @IV, @Key, @FLA )"))
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Assignment VALUES(@firstName, @lastName, @email, @passwordHash, @passwordSalt, @DOB, @cardNum, @CVV, @cardExp, @IV, @Key, @FLA, @image )"))
                 {
                         using (SqlDataAdapter sda = new SqlDataAdapter())
                         {
@@ -172,6 +176,7 @@ namespace AS_Assignment
                             cmd.Parameters.AddWithValue("@IV", Convert.ToBase64String(IV));
                             cmd.Parameters.AddWithValue("@Key", Convert.ToBase64String(Key));
                             cmd.Parameters.AddWithValue("@FLA", 0);
+                            cmd.Parameters.AddWithValue("@image", Image);
                             cmd.Connection = con;
                             con.Open();
                             cmd.ExecuteNonQuery();
@@ -274,7 +279,10 @@ namespace AS_Assignment
             string check = "";
             if (date != "")
             {
-                if (Convert.ToDateTime(date) > DateTime.Now.Date) ;
+                if (Convert.ToDateTime(date) > DateTime.Now.Date)
+                {
+                    check = "Date of birth cannot be in the future";
+                }
             }
             else
             {
@@ -283,20 +291,12 @@ namespace AS_Assignment
             return check;
         }
 
-        private string checkCC(string CCN, string CVV, string date)
+        private string checkPhoto(string photo)
         {
             string check = "";
-            if(CCN != string.Format("{0:0000 0000 0000 0000}", (Int64.Parse("1234567812345678"))))
+            if(photo == "")
             {
-                check += "Credit card number format is invalid.";
-            }
-            if(CVV != string.Format("{0:000}", (Int64.Parse("1234567812345678"))))
-            {
-                check += "CVV format is invalid.";
-            } 
-            if(date != string.Format("{0:00/00}", (Int64.Parse("1234567812345678"))))
-            {
-                check += "Expiry date format is invalid.";
+                check = "Please upload a photo";
             }
             return check;
         }
